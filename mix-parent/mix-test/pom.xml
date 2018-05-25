@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>mix-parent</artifactId>
+        <groupId>cn.clay</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <!-- 用maven构建 普通java项目 我使用的是 File -> New -> Module -> Next(不使用maven骨架项目) -> 后面略过 -->
+    <!-- 这种方式需要自己添加pom文件所有配置,包含maven编译插件,maven入口类插件,打包类型 -->
+    <!-- 打包类型 -->
+    <packaging>jar</packaging>
+    <!-- 在idea 中 Maven Projects 中显示的名字 ,在mutil-module项目中可以方便区分 项目 -->
+    <artifactId>mix-test</artifactId>
+
+    <build>
+        <plugins>
+            <!-- 必须要指定maven 编译和打包插件，否则 LanguageLevel和JavaCompiler 会出问题,比如使用Lambda表达式时(从jdk1.8开始支持的语法糖)，会报编译错误。 如果是mutil-module 项目添加到父pom中即可 -->
+            <!-- 尝试过通过修改 project structure 配置的 Modules 和Project 选项卡中的 Language level ,改为8-lambdas ,改完暂时生效,但是修改pom和重新打开项目会变为 5-enum -->
+            <!-- 解决方式是添加如下maven 插件,如果是mutil-module 项目添加到父pom中即可 -->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                <!--<version>2.3.2</version>-->
+                <!--<configuration>-->
+                    <!--<source>1.8</source>-->
+                    <!--<target>1.8</target>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+            <!-- 打jar包必须要配置入口类全限定名 ， 否则用java -jar *.jar 启动jar程序会报错：找不到主类（eclipse）或 没有主清单属性-->
+            <!-- 这个问题是搭建 nutil-module maven项目，打包运行时报了这个错误。这个插件必须配置到入口类所在的Module中才可以生效 -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.clayton.test.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>
