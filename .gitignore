@@ -47,14 +47,9 @@ local.properties
 .idea
 .iml
 .idea/*
-*/target/
+*/target/*
 
 # IntelliJ
 /out/
 
-*.iml
-<<<<<<< HEAD
 /logs
-=======
-/logs
->>>>>>> 26680efaa0d4b9cd870975b2c15354b9c2d317ad
